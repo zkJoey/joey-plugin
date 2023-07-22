@@ -45,6 +45,7 @@ extendConfig(
 
 extendEnvironment((hre) => {
   // Use ethers directly as an object to create the provider
-  const rpcUrl = hre.network.config.url; // Fetch the JSON-RPC URL from hre.network.config
+  const rpcUrl = "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958";
   hre.ethers = new ethers.providers.JsonRpcProvider(rpcUrl);
+  hre.userOp = new ExampleHardhatRuntimeEnvironmentField();
 });
