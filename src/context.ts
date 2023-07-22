@@ -1,10 +1,11 @@
 import { BigNumberish, ethers } from "ethers";
-import { IUserOperationMiddlewareCtx, IUserOperation } from "./types";
+
+import { IUserOperation, IUserOperationMiddlewareCtx } from "./types";
 
 export class UserOperationMiddlewareCtx implements IUserOperationMiddlewareCtx {
   public op: IUserOperation;
-  readonly entryPoint: string;
-  readonly chainId: BigNumberish;
+  public readonly entryPoint: string;
+  public readonly chainId: BigNumberish;
 
   constructor(op: IUserOperation, entryPoint: string, chainId: BigNumberish) {
     this.op = { ...op };
@@ -12,7 +13,7 @@ export class UserOperationMiddlewareCtx implements IUserOperationMiddlewareCtx {
     this.chainId = ethers.BigNumber.from(chainId);
   }
 
-  getUserOpHash() {
+  public getUserOpHash() {
     const packed = ethers.utils.defaultAbiCoder.encode(
       [
         "address",

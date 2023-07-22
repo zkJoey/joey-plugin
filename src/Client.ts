@@ -1,23 +1,33 @@
 import { BigNumberish, ethers } from "ethers";
+
+import { ERC4337 } from "./constants/erc4337";
+import { UserOperationMiddlewareCtx } from "./context";
+import { BundlerJsonRpcProvider } from "./provider";
+import { EntryPoint, EntryPoint__factory } from "./typechain";
 import {
   IClient,
-  IUserOperationBuilder,
-  ISendUserOperationOpts,
   IClientOpts,
+  ISendUserOperationOpts,
+  IUserOperationBuilder,
 } from "./types";
-import { EntryPoint, EntryPoint__factory } from "./typechain";
 import { OpToJSON } from "./utils";
-import { UserOperationMiddlewareCtx } from "./context";
-import { ERC4337 } from "./constants/erc4337";
-import { BundlerJsonRpcProvider } from "./provider";
 
 export class Client implements IClient {
-  private provider: ethers.providers.JsonRpcProvider;
+
+  public static async init(rpcUrl: string, opts?: IClientOpts) {
+    const instance = new Client(rpcUrl, opts);
+    instance.chainId = await instance.provider
+      .getNetwork()
+      .then((network) => ethers.BigNumber.from(network.chainId));
+
+    return instance;
+  }
 
   public entryPoint: EntryPoint;
   public chainId: BigNumberish;
   public waitTimeoutMs: number;
   public waitIntervalMs: number;
+  private provider: ethers.providers.JsonRpcProvider;
 
   private constructor(rpcUrl: string, opts?: IClientOpts) {
     this.provider = new BundlerJsonRpcProvider(rpcUrl).setBundlerRpc(
@@ -32,20 +42,11 @@ export class Client implements IClient {
     this.waitIntervalMs = 5000;
   }
 
-  public static async init(rpcUrl: string, opts?: IClientOpts) {
-    const instance = new Client(rpcUrl, opts);
-    instance.chainId = await instance.provider
-      .getNetwork()
-      .then((network) => ethers.BigNumber.from(network.chainId));
-
-    return instance;
-  }
-
-  async buildUserOperation(builder: IUserOperationBuilder) {
+  public async buildUserOperation(builder: IUserOperationBuilder) {
     return builder.buildOp(this.entryPoint.address, this.chainId);
   }
 
-  async sendUserOperation(
+  public async sendUserOperation(
     builder: IUserOperationBuilder,
     opts?: ISendUserOperationOpts
   ) {

@@ -1,11 +1,12 @@
 import { BigNumberish, BytesLike, ethers } from "ethers";
-import { OpToJSON } from "./utils";
+
 import { UserOperationMiddlewareCtx } from "./context";
 import {
   IUserOperation,
   IUserOperationBuilder,
   UserOperationMiddlewareFn,
 } from "./types";
+import { OpToJSON } from "./utils";
 
 export const DEFAULT_VERIFICATION_GAS_LIMIT = ethers.BigNumber.from(70000);
 export const DEFAULT_CALL_GAS_LIMIT = ethers.BigNumber.from(35000);
@@ -22,18 +23,147 @@ export const DEFAULT_USER_OP: IUserOperation = {
   maxFeePerGas: ethers.constants.Zero,
   maxPriorityFeePerGas: ethers.constants.Zero,
   paymasterAndData: ethers.utils.hexlify("0x"),
-  signature: ethers.utils.hexlify("0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c"),
+  signature: ethers.utils.hexlify(
+    "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c"
+  ),
 };
 
 export class UserOperationBuilder implements IUserOperationBuilder {
   private defaultOp: IUserOperation;
   private currOp: IUserOperation;
-  private middlewareStack: Array<UserOperationMiddlewareFn>;
+  private middlewareStack: UserOperationMiddlewareFn[];
 
   constructor() {
     this.defaultOp = { ...DEFAULT_USER_OP };
     this.currOp = { ...this.defaultOp };
     this.middlewareStack = [];
+  }
+
+  public getSender() {
+    return this.currOp.sender;
+  }
+  public getNonce() {
+    return this.currOp.nonce;
+  }
+  public getInitCode() {
+    return this.currOp.initCode;
+  }
+  public getCallData() {
+    return this.currOp.callData;
+  }
+  public getCallGasLimit() {
+    return this.currOp.callGasLimit;
+  }
+  public getVerificationGasLimit() {
+    return this.currOp.verificationGasLimit;
+  }
+  public getPreVerificationGas() {
+    return this.currOp.preVerificationGas;
+  }
+  public getMaxFeePerGas() {
+    return this.currOp.maxFeePerGas;
+  }
+  public getMaxPriorityFeePerGas() {
+    return this.currOp.maxPriorityFeePerGas;
+  }
+  public getPaymasterAndData() {
+    return this.currOp.paymasterAndData;
+  }
+  public getSignature() {
+    return this.currOp.signature;
+  }
+  public getOp() {
+    return this.currOp;
+  }
+
+  public setSender(val: string) {
+    this.currOp.sender = ethers.utils.getAddress(val);
+    return this;
+  }
+  public setNonce(val: BigNumberish) {
+    this.currOp.nonce = ethers.BigNumber.from(val);
+    return this;
+  }
+  public setInitCode(val: BytesLike) {
+    this.currOp.initCode = ethers.utils.hexlify(val);
+    return this;
+  }
+  public setCallData(val: BytesLike) {
+    this.currOp.callData = ethers.utils.hexlify(val);
+    return this;
+  }
+  public setCallGasLimit(val: BigNumberish) {
+    this.currOp.callGasLimit = ethers.BigNumber.from(val);
+    return this;
+  }
+  public setVerificationGasLimit(val: BigNumberish) {
+    this.currOp.verificationGasLimit = ethers.BigNumber.from(val);
+    return this;
+  }
+  public setPreVerificationGas(val: BigNumberish) {
+    this.currOp.preVerificationGas = ethers.BigNumber.from(val);
+    return this;
+  }
+  public setMaxFeePerGas(val: BigNumberish) {
+    this.currOp.maxFeePerGas = ethers.BigNumber.from(val);
+    return this;
+  }
+  public setMaxPriorityFeePerGas(val: BigNumberish) {
+    this.currOp.maxPriorityFeePerGas = ethers.BigNumber.from(val);
+    return this;
+  }
+  public setPaymasterAndData(val: BytesLike) {
+    this.currOp.paymasterAndData = ethers.utils.hexlify(val);
+    return this;
+  }
+  public setSignature(val: BytesLike) {
+    this.currOp.signature = ethers.utils.hexlify(val);
+    return this;
+  }
+  public setPartial(partialOp: Partial<IUserOperation>) {
+    this.currOp = { ...this.currOp, ...this.resolveFields(partialOp) };
+    return this;
+  }
+
+  public useDefaults(partialOp: Partial<IUserOperation>) {
+    const resolvedOp = this.resolveFields(partialOp);
+    this.defaultOp = { ...this.defaultOp, ...resolvedOp };
+    this.currOp = { ...this.currOp, ...resolvedOp };
+
+    return this;
+  }
+  public resetDefaults() {
+    this.defaultOp = { ...DEFAULT_USER_OP };
+    return this;
+  }
+
+  public useMiddleware(fn: UserOperationMiddlewareFn) {
+    this.middlewareStack = [...this.middlewareStack, fn];
+    return this;
+  }
+  public resetMiddleware() {
+    this.middlewareStack = [];
+    return this;
+  }
+
+  public async buildOp(entryPoint: string, chainId: BigNumberish) {
+    const ctx = new UserOperationMiddlewareCtx(
+      this.currOp,
+      entryPoint,
+      chainId
+    );
+
+    for (const fn of this.middlewareStack) {
+      await fn(ctx);
+    }
+    this.setPartial(ctx.op);
+
+    return OpToJSON(this.currOp);
+  }
+
+  public resetOp() {
+    this.currOp = { ...this.defaultOp };
+    return this;
   }
 
   private resolveFields(op: Partial<IUserOperation>): Partial<IUserOperation> {
@@ -88,132 +218,5 @@ export class UserOperationBuilder implements IUserOperationBuilder {
           : prev,
       {}
     );
-  }
-
-  getSender() {
-    return this.currOp.sender;
-  }
-  getNonce() {
-    return this.currOp.nonce;
-  }
-  getInitCode() {
-    return this.currOp.initCode;
-  }
-  getCallData() {
-    return this.currOp.callData;
-  }
-  getCallGasLimit() {
-    return this.currOp.callGasLimit;
-  }
-  getVerificationGasLimit() {
-    return this.currOp.verificationGasLimit;
-  }
-  getPreVerificationGas() {
-    return this.currOp.preVerificationGas;
-  }
-  getMaxFeePerGas() {
-    return this.currOp.maxFeePerGas;
-  }
-  getMaxPriorityFeePerGas() {
-    return this.currOp.maxPriorityFeePerGas;
-  }
-  getPaymasterAndData() {
-    return this.currOp.paymasterAndData;
-  }
-  getSignature() {
-    return this.currOp.signature;
-  }
-  getOp() {
-    return this.currOp;
-  }
-
-  setSender(val: string) {
-    this.currOp.sender = ethers.utils.getAddress(val);
-    return this;
-  }
-  setNonce(val: BigNumberish) {
-    this.currOp.nonce = ethers.BigNumber.from(val);
-    return this;
-  }
-  setInitCode(val: BytesLike) {
-    this.currOp.initCode = ethers.utils.hexlify(val);
-    return this;
-  }
-  setCallData(val: BytesLike) {
-    this.currOp.callData = ethers.utils.hexlify(val);
-    return this;
-  }
-  setCallGasLimit(val: BigNumberish) {
-    this.currOp.callGasLimit = ethers.BigNumber.from(val);
-    return this;
-  }
-  setVerificationGasLimit(val: BigNumberish) {
-    this.currOp.verificationGasLimit = ethers.BigNumber.from(val);
-    return this;
-  }
-  setPreVerificationGas(val: BigNumberish) {
-    this.currOp.preVerificationGas = ethers.BigNumber.from(val);
-    return this;
-  }
-  setMaxFeePerGas(val: BigNumberish) {
-    this.currOp.maxFeePerGas = ethers.BigNumber.from(val);
-    return this;
-  }
-  setMaxPriorityFeePerGas(val: BigNumberish) {
-    this.currOp.maxPriorityFeePerGas = ethers.BigNumber.from(val);
-    return this;
-  }
-  setPaymasterAndData(val: BytesLike) {
-    this.currOp.paymasterAndData = ethers.utils.hexlify(val);
-    return this;
-  }
-  setSignature(val: BytesLike) {
-    this.currOp.signature = ethers.utils.hexlify(val);
-    return this;
-  }
-  setPartial(partialOp: Partial<IUserOperation>) {
-    this.currOp = { ...this.currOp, ...this.resolveFields(partialOp) };
-    return this;
-  }
-
-  useDefaults(partialOp: Partial<IUserOperation>) {
-    const resolvedOp = this.resolveFields(partialOp);
-    this.defaultOp = { ...this.defaultOp, ...resolvedOp };
-    this.currOp = { ...this.currOp, ...resolvedOp };
-
-    return this;
-  }
-  resetDefaults() {
-    this.defaultOp = { ...DEFAULT_USER_OP };
-    return this;
-  }
-
-  useMiddleware(fn: UserOperationMiddlewareFn) {
-    this.middlewareStack = [...this.middlewareStack, fn];
-    return this;
-  }
-  resetMiddleware() {
-    this.middlewareStack = [];
-    return this;
-  }
-
-  async buildOp(entryPoint: string, chainId: BigNumberish) {
-    const ctx = new UserOperationMiddlewareCtx(
-      this.currOp,
-      entryPoint,
-      chainId
-    );
-
-    for (const fn of this.middlewareStack) {
-      await fn(ctx);
-    }
-    this.setPartial(ctx.op);
-
-    return OpToJSON(this.currOp);
-  }
-
-  resetOp() {
-    this.currOp = { ...this.defaultOp };
-    return this;
   }
 }

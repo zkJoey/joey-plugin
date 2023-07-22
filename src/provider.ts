@@ -10,14 +10,14 @@ export class BundlerJsonRpcProvider extends ethers.providers.JsonRpcProvider {
     "eth_supportedEntryPoints",
   ]);
 
-  setBundlerRpc(bundlerRpc?: string): BundlerJsonRpcProvider {
+  public setBundlerRpc(bundlerRpc?: string): BundlerJsonRpcProvider {
     if (bundlerRpc) {
       this.bundlerRpc = new ethers.providers.JsonRpcProvider(bundlerRpc);
     }
     return this;
   }
 
-  send(method: string, params: any[]): Promise<any> {
+  public send(method: string, params: any[]): Promise<any> {
     if (this.bundlerRpc && this.bundlerMethods.has(method)) {
       return this.bundlerRpc.send(method, params);
     }

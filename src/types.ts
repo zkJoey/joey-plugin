@@ -1,4 +1,5 @@
 import { BigNumberish, BytesLike } from "ethers";
+
 import { UserOperationEventEvent } from "./typechain/EntryPoint";
 
 export interface IUserOperation {

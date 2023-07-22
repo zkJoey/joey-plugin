@@ -1,9 +1,8 @@
+import { ethers } from "ethers";
 import { extendConfig, extendEnvironment } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
 import { HardhatConfig, HardhatUserConfig } from "hardhat/types";
 import path from "path";
-import { ethers } from "ethers";
-
 
 import { ExampleHardhatRuntimeEnvironmentField } from "./ExampleHardhatRuntimeEnvironmentField";
 // This import is needed to let the TypeScript compiler know that it should include your type
@@ -45,7 +44,8 @@ extendConfig(
 
 extendEnvironment((hre) => {
   // Use ethers directly as an object to create the provider
-  const rpcUrl = "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958";
+  const rpcUrl =
+    "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958";
   hre.ethers = new ethers.providers.JsonRpcProvider(rpcUrl);
   hre.userOp = new ExampleHardhatRuntimeEnvironmentField();
 });
