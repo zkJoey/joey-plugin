@@ -22,12 +22,11 @@ export const createCalls = async () => {
     });
 
     console.log("UserOperationBuilder instance:", builder);
-
     const response = await client.sendUserOperation(builder);
-
     console.log("Response:", response);
-    console.log('-------------');
+
   } catch (error) {
+    
     console.error("Error:", error);
   }
 };

@@ -34,7 +34,6 @@ declare module "hardhat/types/runtime" {
   }
 }
 
-
 declare module "hardhat/types" {
   export interface HardhatRuntimeEnvironment {
     ethers: ethers.providers.Provider;

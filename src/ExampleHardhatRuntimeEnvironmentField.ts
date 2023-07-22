@@ -10,6 +10,7 @@ import { DEFAULT_USER_OP } from "./builder";
 export class ExampleHardhatRuntimeEnvironmentField {
 
   public builder: UserOperationBuilder | null = null; 
+  public clientOptions: IClientOpts | null = null;
 
   public async buildUserOP() {
 
@@ -42,14 +43,15 @@ export class ExampleHardhatRuntimeEnvironmentField {
     const entryPoint = ERC4337.EntryPoint;
     const client = await Client.init(rpc, clientOptions);
 
-    const builder = new UserOperationBuilder().useDefaults({
+    this.builder = new UserOperationBuilder().useDefaults({
       sender: "0x154C51aB8A0F16A5EC19b447e77C13599EDa1C36",
       maxFeePerGas: ethers.BigNumber.from(27000000000),
     });
 
-    console.log("UserOperationBuilder instance:", builder);
+    console.log("UserOperationBuilder instance:", this.builder);
 
-    const response = await client.sendUserOperation(builder);
+    const response = await client.sendUserOperation(this.builder);
+    console.log("UserOperationBuilder response:", response);
   }
 };
 
