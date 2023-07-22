@@ -1,5 +1,5 @@
 {
-  "name": "@zkJoey/Hardhat-ERC4337",
+  "name": "hardhat-ts-plugin-boilerplate",
   "version": "0.0.1",
   "description": "Hardhat TypeScript plugin for building erc4337 user ops",
   "repository": "github:nomiclabs/hardhat-ts-plugin-boilerplate",

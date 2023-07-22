@@ -1,7 +1,7 @@
 import { BigNumberish, BytesLike, ethers, getBytes } from "ethers";
 import { OpToJSON } from "./utils/opToJSON";
-import { IUserOperation, IUserOpBuilder, UserOperationMiddlewareFn, IUserOperationMiddlewareCtx } from "./types";
-
+import { IUserOperation, IUserOpBuilder, UserOperationMiddlewareFn } from "./types";
+import { UserOperationMiddlewareCtx } from "./context";
 export const DEFAULT_VERIFICATION_GAS_LIMIT = 7000n;
 export const DEFAULT_CALL_GAS_LIMIT = 35000n;
 export const DEFAULT_PRE_VERIFICATION_GAS = 21000n;
