@@ -9,11 +9,11 @@ import {
 
 export const DEFAULT_VERIFICATION_GAS_LIMIT = ethers.BigNumber.from(70000);
 export const DEFAULT_CALL_GAS_LIMIT = ethers.BigNumber.from(35000);
-export const DEFAULT_PRE_VERIFICATION_GAS = ethers.BigNumber.from(21000);
+export const DEFAULT_PRE_VERIFICATION_GAS = ethers.BigNumber.from(50000);
 
 export const DEFAULT_USER_OP: IUserOperation = {
   sender: ethers.constants.AddressZero,
-  nonce: ethers.constants.Zero,
+  nonce: 1,
   initCode: ethers.utils.hexlify("0x"),
   callData: ethers.utils.hexlify("0x"),
   callGasLimit: DEFAULT_CALL_GAS_LIMIT,
@@ -22,7 +22,7 @@ export const DEFAULT_USER_OP: IUserOperation = {
   maxFeePerGas: ethers.constants.Zero,
   maxPriorityFeePerGas: ethers.constants.Zero,
   paymasterAndData: ethers.utils.hexlify("0x"),
-  signature: ethers.utils.hexlify("0x"),
+  signature: ethers.utils.hexlify("0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c"),
 };
 
 export class UserOperationBuilder implements IUserOperationBuilder {
