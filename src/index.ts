@@ -2,6 +2,8 @@ import { extendConfig, extendEnvironment } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
 import { HardhatConfig, HardhatUserConfig } from "hardhat/types";
 import path from "path";
+import { ethers } from "ethers";
+
 
 import { ExampleHardhatRuntimeEnvironmentField } from "./ExampleHardhatRuntimeEnvironmentField";
 // This import is needed to let the TypeScript compiler know that it should include your type
@@ -42,7 +44,7 @@ extendConfig(
 );
 
 extendEnvironment((hre) => {
-  const ethers = require("ethers");
-  hre.ethers = ethers;
-  hre.ethers = new ethers(hre.network.provider);
+  // Use ethers directly as an object to create the provider
+  const rpcUrl = hre.network.config.url; // Fetch the JSON-RPC URL from hre.network.config
+  hre.ethers = new ethers.providers.JsonRpcProvider(rpcUrl);
 });
