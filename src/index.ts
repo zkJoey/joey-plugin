@@ -42,8 +42,7 @@ extendConfig(
 );
 
 extendEnvironment((hre) => {
-  // We add a field to the Hardhat Runtime Environment here.
-  // We use lazyObject to avoid initializing things until they are actually
-  // needed.
-  hre.example = lazyObject(() => new ExampleHardhatRuntimeEnvironmentField());
+  const ethers = require("ethers");
+  hre.ethers = ethers;
+  hre.ethers = new ethers(hre.network.provider);
 });
