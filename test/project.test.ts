@@ -51,16 +51,19 @@ describe("Integration with userOps", function () {
 
       // Send UOP
       const client = await Client.init(rpc, clientOptions);
-      await client.sendUserOperation(instance.builder);
+      if (instance.builder) {
+        // Send UOP
+        const client = await Client.init(rpc, clientOptions);
+        await client.sendUserOperation(instance.builder);
+      } else {
+        // Handle the case when instance.builder is null (if needed)
+        // For example, you could throw an error or log a message.
+        throw new Error("UserOperationBuilder not initialized");
+      }
 
     })
 
-
-
-
   });
-
-
 
 
 
