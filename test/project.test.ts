@@ -49,18 +49,15 @@ describe("Integration with userOps", function () {
       const instance = new ExampleHardhatRuntimeEnvironmentField();
       await instance.buildUserOP();
 
-      // Send UOP
-      const client = await Client.init(rpc, clientOptions);
       if (instance.builder) {
         // Send UOP
         const client = await Client.init(rpc, clientOptions);
         await client.sendUserOperation(instance.builder);
       } else {
-        // Handle the case when instance.builder is null (if needed)
-        // For example, you could throw an error or log a message.
+        // Handle the case when instance.builder is null
         throw new Error("UserOperationBuilder not initialized");
       }
-
+a
     })
 
   });
