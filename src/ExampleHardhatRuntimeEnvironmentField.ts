@@ -1,21 +1,56 @@
+import { Client } from "./Client";
 import { ethers } from "ethers";
-import { UserOpBuilder } from "./UserOpBuilder"; // Replace with the correct path to the UserOpBuilder class
-import { ProviderWrapper } from 'hardhat/plugins'
+import { ERC4337 } from "./constants/erc4337";
+import { IClientOpts } from "./types";
+import { UserOperationBuilder } from "./builder";
+import { BundlerJsonRpcProvider } from "./provider";
+import { DEFAULT_USER_OP } from "./builder";
 
 
 export class ExampleHardhatRuntimeEnvironmentField {
-  public sendUserOP() {
 
-      // Initialize the UserOpBuilder
-      const userOpBuilder = new UserOpBuilder();
+  public builder: UserOperationBuilder | null = null; 
 
-      // Set the required fields for the user operation
-      // Assume you have access to the entry point and chain ID externally
-      // Build the final user operation
-      // Now, you can use the finalUserOp for further processing or send it to the client.
-      // await contract.sendUserOperation(finalUserOp);
-      // Alternatively, you can return the finalUserOp to be used later or sent elsewhere.
-      return finalUserOp;
+  public async buildUserOP(): Promise<void> {
 
+    const clientOptions: IClientOpts = {
+      entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+      overrideBundlerRpc: "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958",
+    };
+
+    const rpc = "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958";
+    const entryPoint = ERC4337.EntryPoint;
+    const client = await Client.init(rpc, clientOptions);
+
+    const builder = new UserOperationBuilder().useDefaults({
+      sender: "0x154C51aB8A0F16A5EC19b447e77C13599EDa1C36",
+      maxFeePerGas: ethers.BigNumber.from(27000000000),
+    });
+
+    console.log("UserOperationBuilder instance:", builder);
+
+    }
+
+
+  public async sendUserOP() {
+
+    const clientOptions: IClientOpts = {
+      entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+      overrideBundlerRpc: "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958",
+    };
+    const rpc = "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958";
+    const entryPoint = ERC4337.EntryPoint;
+    const client = await Client.init(rpc, clientOptions);
+
+    const builder = new UserOperationBuilder().useDefaults({
+      sender: "0x154C51aB8A0F16A5EC19b447e77C13599EDa1C36",
+      maxFeePerGas: ethers.BigNumber.from(27000000000),
+    });
+
+    console.log("UserOperationBuilder instance:", builder);
+
+    const response = await client.sendUserOperation(builder);
   }
-}
+};
+
+
