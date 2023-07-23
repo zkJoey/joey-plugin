@@ -1,7 +1,6 @@
-import { ethers } from "ethers";
+import { ethers,  BigNumberish, BytesLike  } from "ethers";
 
 import { UserOperationBuilder } from "./builder";
-import { DEFAULT_USER_OP } from "./builder";
 import { Client } from "./Client";
 import { ERC4337 } from "./constants/erc4337";
 import { BundlerJsonRpcProvider } from "./provider";
@@ -14,7 +13,9 @@ export class ExampleHardhatRuntimeEnvironmentField {
   public builder: UserOperationBuilder | null = null;
   public clientOptions: IClientOpts | null = null;
 
-  public async buildUserOP(bundlerRpc: string, sender: string) {
+  public async buildUserOP(
+    bundlerRpc: string, 
+    sender: string) {
     const clientOptions: IClientOpts = {
       entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
       overrideBundlerRpc:
@@ -55,6 +56,33 @@ export class ExampleHardhatRuntimeEnvironmentField {
   }
 
   public getUserOpBuilder(){
+    // ALL METHODS BELOW CAN BE CALLED ON THE BUILDER
+    // getSender: () => string;
+    // getNonce: () => BigNumberish;
+    // getInitCode: () => BytesLike;
+    // getCallData: () => BytesLike;
+    // getCallGasLimit: () => BigNumberish;
+    // getVerificationGasLimit: () => BigNumberish;
+    // getPreVerificationGas: () => BigNumberish;
+    // getMaxFeePerGas: () => BigNumberish;
+    // getMaxPriorityFeePerGas: () => BigNumberish;
+    // getPaymasterAndData: () => BytesLike;
+    // getSignature: () => BytesLike;
+    // getOp: () => IUserOperation;
+
+    // // set methods.
+    // setSender: (address: string) => IUserOperationBuilder;
+    // setNonce: (nonce: BigNumberish) => IUserOperationBuilder;
+    // setInitCode: (code: BytesLike) => IUserOperationBuilder;
+    // setCallData: (data: BytesLike) => IUserOperationBuilder;
+    // setCallGasLimit: (gas: BigNumberish) => IUserOperationBuilder;
+    // setVerificationGasLimit: (gas: BigNumberish) => IUserOperationBuilder;
+    // setPreVerificationGas: (gas: BigNumberish) => IUserOperationBuilder;
+    // setMaxFeePerGas: (fee: BigNumberish) => IUserOperationBuilder;
+    // setMaxPriorityFeePerGas: (fee: BigNumberish) => IUserOperationBuilder;
+    // setPaymasterAndData: (data: BytesLike) => IUserOperationBuilder;
+    // setSignature: (bytes: BytesLike) => IUserOperationBuilder;
+    // setPartial: (partialOp: Partial<IUserOperation>) => IUserOperationBuilder;
     return this.builder;
   }
 }
