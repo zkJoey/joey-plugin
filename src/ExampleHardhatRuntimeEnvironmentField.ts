@@ -1,7 +1,7 @@
+import { ethers } from "ethers";
 import { ProviderWrapper } from "hardhat/plugins";
 import { EIP1193Provider } from "hardhat/types";
 import { RequestArguments } from "hardhat/types";
-import { ethers } from "ethers";
 
 import { UserOperationBuilder } from "./builder";
 import { Client } from "./Client";
@@ -13,9 +13,7 @@ export class ExampleHardhatRuntimeEnvironmentField {
   public builder: UserOperationBuilder | null = null;
   public clientOptions: IClientOpts | null = null;
 
-  public async buildUserOP(
-    bundlerRpc: string, 
-    sender: string) {
+  public async buildUserOP(bundlerRpc: string, sender: string) {
     const clientOptions: IClientOpts = {
       entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
       overrideBundlerRpc: bundlerRpc,
@@ -51,7 +49,7 @@ export class ExampleHardhatRuntimeEnvironmentField {
     console.log("UserOperationBuilder response:", response);
   }
 
-  public getUserOpBuilder(){
+  public getUserOpBuilder() {
     // ALL METHODS BELOW CAN BE CALLED ON THE BUILDER
     // getSender: () => string;
     // getNonce: () => BigNumberish;
@@ -84,12 +82,6 @@ export class ExampleHardhatRuntimeEnvironmentField {
 }
 
 class HardhatBundlerProvider extends ProviderWrapper {
-  constructor(
-    public readonly gasPrice: any,
-    protected readonly _wrappedProvider: EIP1193Provider
-  ) {
-    super(_wrappedProvider);
-  }
   private bundlerRpc?: ethers.providers.JsonRpcProvider;
   private bundlerMethods = new Set([
     "eth_sendUserOperation",
@@ -98,6 +90,12 @@ class HardhatBundlerProvider extends ProviderWrapper {
     "eth_getUserOperationReceipt",
     "eth_supportedEntryPoints",
   ]);
+  constructor(
+    public readonly gasPrice: any,
+    protected readonly _wrappedProvider: EIP1193Provider
+  ) {
+    super(_wrappedProvider);
+  }
   public setBundlerRpc(bundlerRpc?: string): HardhatBundlerProvider {
     if (bundlerRpc) {
       this.bundlerRpc = new ethers.providers.JsonRpcProvider(bundlerRpc);
@@ -107,8 +105,8 @@ class HardhatBundlerProvider extends ProviderWrapper {
 
   public async request(args: RequestArguments) {
     if (this.bundlerMethods.has(args.method)) {
-    return this._wrappedProvider.request(args);
-    } else{
+      return this._wrappedProvider.request(args);
+    } else {
       throw new Error(`Method not supported: ${args.method}`);
     }
   }
