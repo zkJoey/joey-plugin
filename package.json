@@ -1,7 +1,7 @@
 {
-  "name": "hardhat-ts-plugin-boilerplate",
+  "name": "hardhat-useroperation",
   "version": "0.0.1",
-  "description": "Hardhat TypeScript plugin boilerplate",
+  "description": "Hardhat TypeScript plugin hardhat-useroperation",
   "repository": "github:nomiclabs/hardhat-ts-plugin-boilerplate",
   "author": "Nomic Labs LLC",
   "license": "MIT",
@@ -11,7 +11,9 @@
     "ethereum",
     "smart-contracts",
     "hardhat",
-    "hardhat-plugin"
+    "hardhat-plugin",
+    "erc4337",
+    "userOperation"
   ],
   "scripts": {
     "lint:fix": "prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && tslint --fix --config tslint.json --project tsconfig.json",
