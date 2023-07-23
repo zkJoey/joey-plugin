@@ -3,6 +3,9 @@ import { extendConfig, extendEnvironment } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
 import { HardhatConfig, HardhatUserConfig } from "hardhat/types";
 import path from "path";
+import { task, types } from "hardhat/config";
+
+
 
 import { ExampleHardhatRuntimeEnvironmentField } from "./ExampleHardhatRuntimeEnvironmentField";
 // This import is needed to let the TypeScript compiler know that it should include your type
@@ -49,3 +52,12 @@ extendEnvironment((hre) => {
   hre.ethers = new ethers.providers.JsonRpcProvider(rpcUrl);
   hre.userOp = new ExampleHardhatRuntimeEnvironmentField();
 });
+
+
+task(
+  "hello",
+  "Prints 'Hello, World!'",
+  async function (taskArguments, hre, runSuper) {
+    console.log("Hello, World!");
+  }
+);
