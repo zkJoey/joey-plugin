@@ -827,4 +827,6 @@ export interface SimpleAccount extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
+
+  // tslint:disable-next-line: unified-signatures
 }
