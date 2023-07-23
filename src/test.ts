@@ -18,7 +18,6 @@ export const createCalls = async () => {
       "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958";
     const entryPoint = ERC4337.EntryPoint;
     const client = await Client.init(rpc, clientOptions);
-
     const builder = new UserOperationBuilder().useDefaults({
       sender: "0x154C51aB8A0F16A5EC19b447e77C13599EDa1C36",
       maxFeePerGas: ethers.BigNumber.from(27000000000),

@@ -80,6 +80,4 @@ class HardhatBundlerProvider extends ProviderWrapper {
 
     return this._wrappedProvider.request(args);
   }
-
-  
 }
