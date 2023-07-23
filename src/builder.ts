@@ -20,11 +20,11 @@ export const DEFAULT_USER_OP: IUserOperation = {
   callGasLimit: DEFAULT_CALL_GAS_LIMIT,
   verificationGasLimit: DEFAULT_VERIFICATION_GAS_LIMIT,
   preVerificationGas: DEFAULT_PRE_VERIFICATION_GAS,
-  maxFeePerGas: ethers.constants.Zero,
+  maxFeePerGas: ethers.BigNumber.from(27000000000),
   maxPriorityFeePerGas: ethers.constants.Zero,
   paymasterAndData: ethers.utils.hexlify("0x"),
   signature: ethers.utils.hexlify(
-    "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c"
+    "0x"
   ),
 };
 

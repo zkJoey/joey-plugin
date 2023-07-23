@@ -14,40 +14,38 @@ export class ExampleHardhatRuntimeEnvironmentField {
   public builder: UserOperationBuilder | null = null;
   public clientOptions: IClientOpts | null = null;
 
-  public async buildUserOP() {
+  public async buildUserOP(bundlerRpc: string, sender: string) {
     const clientOptions: IClientOpts = {
       entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
       overrideBundlerRpc:
-        "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958",
+      bundlerRpc,
     };
 
     const rpc =
-      "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958";
+    bundlerRpc;
     const entryPoint = ERC4337.EntryPoint;
     const client = await Client.init(rpc, clientOptions);
 
     this.builder = new UserOperationBuilder().useDefaults({
-      sender: "0x154C51aB8A0F16A5EC19b447e77C13599EDa1C36",
-      maxFeePerGas: ethers.BigNumber.from(27000000000),
+      sender: sender,
     });
 
     console.log("UserOperationBuilder instance:", this.builder);
   }
 
-  public async sendUserOP() {
+  public async sendUserOP(bundlerRpc: string, sender: string) {
     const clientOptions: IClientOpts = {
       entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
       overrideBundlerRpc:
-        "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958",
+      bundlerRpc,
     };
     const rpc =
-      "https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958";
+    bundlerRpc;
     const entryPoint = ERC4337.EntryPoint;
     const client = await Client.init(rpc, clientOptions);
 
     this.builder = new UserOperationBuilder().useDefaults({
-      sender: "0x154C51aB8A0F16A5EC19b447e77C13599EDa1C36",
-      maxFeePerGas: ethers.BigNumber.from(27000000000),
+      sender: sender,
     });
 
     console.log("UserOperationBuilder instance:", this.builder);
