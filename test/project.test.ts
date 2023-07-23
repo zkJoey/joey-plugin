@@ -25,7 +25,7 @@ describe("Integration with userOps", function () {
           maxFeePerGas: ethers.BigNumber.from(27000000000),
         });
       const instance = new ExampleHardhatRuntimeEnvironmentField();
-      await instance.buildUserOP();
+      await instance.buildUserOP("https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958","0x154C51aB8A0F16A5EC19b447e77C13599EDa1C36" );
 
       assert.deepEqual(instance.builder, builder);
     });
@@ -47,7 +47,7 @@ describe("Integration with userOps", function () {
 
       // Build UOP
       const instance = new ExampleHardhatRuntimeEnvironmentField();
-      await instance.buildUserOP();
+      await instance.buildUserOP("https://api.stackup.sh/v1/node/43cc2d4bea8e9faa403a27cd3d040359793c1ea519fc0fe777f0ac35bf1e5958", "0x154C51aB8A0F16A5EC19b447e77C13599EDa1C36");
 
       if (instance.builder) {
         // Send UOP
