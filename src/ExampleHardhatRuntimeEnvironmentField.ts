@@ -6,6 +6,9 @@ import { Client } from "./Client";
 import { ERC4337 } from "./constants/erc4337";
 import { BundlerJsonRpcProvider } from "./provider";
 import { IClientOpts } from "./types";
+import { ProviderWrapper } from "hardhat/plugins";
+import { EIP1193Provider } from "hardhat/types";
+import { RequestArguments } from "hardhat/types";
 
 export class ExampleHardhatRuntimeEnvironmentField {
   public builder: UserOperationBuilder | null = null;
@@ -52,4 +55,31 @@ export class ExampleHardhatRuntimeEnvironmentField {
     const response = await client.sendUserOperation(this.builder);
     console.log("UserOperationBuilder response:", response);
   }
+}
+
+class HardhatBundlerProvider extends ProviderWrapper {
+  constructor(
+    public readonly gasPrice: any,
+    protected readonly _wrappedProvider: EIP1193Provider
+  ) {
+    super(_wrappedProvider);
+  }
+  private bundlerMethods = new Set([
+    "eth_sendUserOperation",
+    "eth_estimateUserOperationGas",
+    "eth_getUserOperationByHash",
+    "eth_getUserOperationReceipt",
+    "eth_supportedEntryPoints",
+  ]);
+
+  public async request(args: RequestArguments) {
+    if (this.bundlerMethods.has(args.method)) {
+      const params = this._getParams(args);
+      const tx = params[0];
+    }
+
+    return this._wrappedProvider.request(args);
+  }
+
+  
 }
