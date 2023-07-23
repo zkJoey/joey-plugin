@@ -1,7 +1,18 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("./src/ExampleHardhatRuntimeEnvironmentField.ts")
 
-task("buildOp", "Build an ERC4337 userOperation").setAction(async () => {});
-task("sendOp", "Send an ERC4337 userOperation").setAction(async () => {});
+
+// Define the 'buildOp' task
+task("buildOp", "Build an ERC4337 userOperation").setAction(async (taskArguments, hre, runSuper) => {
+  const instance = new ExampleHardhatRuntimeEnvironmentField();
+  await instance.buildUserOP();
+});
+
+// Define the 'sendOp' task
+task("sendOp", "Send an ERC4337 userOperation").setAction(async (taskArguments, hre, runSuper) => {
+  const instance = new ExampleHardhatRuntimeEnvironmentField();
+  await instance.sendUserOP();
+});
 
 
 /**
