@@ -1,6 +1,7 @@
 import { ProviderWrapper } from "hardhat/plugins";
 import { EIP1193Provider } from "hardhat/types";
 import { RequestArguments } from "hardhat/types";
+import { ethers } from "ethers";
 
 import { UserOperationBuilder } from "./builder";
 import { Client } from "./Client";
@@ -51,6 +52,33 @@ export class ExampleHardhatRuntimeEnvironmentField {
   }
 
   public getUserOpBuilder(){
+    // ALL METHODS BELOW CAN BE CALLED ON THE BUILDER
+    // getSender: () => string;
+    // getNonce: () => BigNumberish;
+    // getInitCode: () => BytesLike;
+    // getCallData: () => BytesLike;
+    // getCallGasLimit: () => BigNumberish;
+    // getVerificationGasLimit: () => BigNumberish;
+    // getPreVerificationGas: () => BigNumberish;
+    // getMaxFeePerGas: () => BigNumberish;
+    // getMaxPriorityFeePerGas: () => BigNumberish;
+    // getPaymasterAndData: () => BytesLike;
+    // getSignature: () => BytesLike;
+    // getOp: () => IUserOperation;
+
+    // // set methods.
+    // setSender: (address: string) => IUserOperationBuilder;
+    // setNonce: (nonce: BigNumberish) => IUserOperationBuilder;
+    // setInitCode: (code: BytesLike) => IUserOperationBuilder;
+    // setCallData: (data: BytesLike) => IUserOperationBuilder;
+    // setCallGasLimit: (gas: BigNumberish) => IUserOperationBuilder;
+    // setVerificationGasLimit: (gas: BigNumberish) => IUserOperationBuilder;
+    // setPreVerificationGas: (gas: BigNumberish) => IUserOperationBuilder;
+    // setMaxFeePerGas: (fee: BigNumberish) => IUserOperationBuilder;
+    // setMaxPriorityFeePerGas: (fee: BigNumberish) => IUserOperationBuilder;
+    // setPaymasterAndData: (data: BytesLike) => IUserOperationBuilder;
+    // setSignature: (bytes: BytesLike) => IUserOperationBuilder;
+    // setPartial: (partialOp: Partial<IUserOperation>) => IUserOperationBuilder;
     return this.builder;
   }
 }
@@ -62,6 +90,7 @@ class HardhatBundlerProvider extends ProviderWrapper {
   ) {
     super(_wrappedProvider);
   }
+  private bundlerRpc?: ethers.providers.JsonRpcProvider;
   private bundlerMethods = new Set([
     "eth_sendUserOperation",
     "eth_estimateUserOperationGas",
@@ -69,6 +98,12 @@ class HardhatBundlerProvider extends ProviderWrapper {
     "eth_getUserOperationReceipt",
     "eth_supportedEntryPoints",
   ]);
+  public setBundlerRpc(bundlerRpc?: string): HardhatBundlerProvider {
+    if (bundlerRpc) {
+      this.bundlerRpc = new ethers.providers.JsonRpcProvider(bundlerRpc);
+    }
+    return this;
+  }
 
   public async request(args: RequestArguments) {
     if (this.bundlerMethods.has(args.method)) {
