@@ -23,9 +23,7 @@ export const DEFAULT_USER_OP: IUserOperation = {
   maxFeePerGas: ethers.BigNumber.from(27000000000),
   maxPriorityFeePerGas: ethers.constants.Zero,
   paymasterAndData: ethers.utils.hexlify("0x"),
-  signature: ethers.utils.hexlify(
-    "0x"
-  ),
+  signature: ethers.utils.hexlify("0x"),
 };
 
 export class UserOperationBuilder implements IUserOperationBuilder {

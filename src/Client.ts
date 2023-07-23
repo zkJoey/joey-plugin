@@ -13,7 +13,6 @@ import {
 import { OpToJSON } from "./utils";
 
 export class Client implements IClient {
-
   public static async init(rpcUrl: string, opts?: IClientOpts) {
     const instance = new Client(rpcUrl, opts);
     instance.chainId = await instance.provider
