@@ -66,6 +66,7 @@ class HardhatBundlerProvider extends ProviderWrapper {
   ) {
     super(_wrappedProvider);
   }
+  private bundlerRpc?: ethers.providers.JsonRpcProvider;
   private bundlerMethods = new Set([
     "eth_sendUserOperation",
     "eth_estimateUserOperationGas",
@@ -74,12 +75,18 @@ class HardhatBundlerProvider extends ProviderWrapper {
     "eth_supportedEntryPoints",
   ]);
 
+  public setBundlerRpc(bundlerRpc?: string): HardhatBundlerProvider {
+    if (bundlerRpc) {
+      this.bundlerRpc = new ethers.providers.JsonRpcProvider(bundlerRpc);
+    }
+    return this;
+  }
+
   public async request(args: RequestArguments) {
     if (this.bundlerMethods.has(args.method)) {
-      const params = this._getParams(args);
-      const tx = params[0];
-    }
-
     return this._wrappedProvider.request(args);
+    } else{
+      throw new Error(`Method not supported: ${args.method}`);
+    }
   }
 }
